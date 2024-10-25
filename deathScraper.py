@@ -20,42 +20,52 @@ import chromedriver_binary  # Adds chromedriver binary to path
 import time
 import keyboard
 
-options = Options()
+class Wonder:
 
-prefs = {"download.default_dictionary" : "C\\Users\\DKMiller\\Downloads\\", 'download.prompt_for_download': False }
+    def __init__(self, filepath):
+        self.filepath = filepath
 
-options.add_experimental_option("prefs", prefs)
+    def deathDataset(self):
+        
+        options = Options()
 
-driver = webdriver.Chrome(options=options)
-url = 'https://wonder.cdc.gov/ucd-icd10.html'
+        prefs = {"download.default_dictionary" : self.filepath } # "C\\Users\\DKMiller\\Downloads\\"
 
-driver.get(url)
+        options.add_experimental_option("prefs", prefs)
 
-# click agree button 
-agree_button = driver.find_element(By.NAME, 'action-I Agree')
-driver.execute_script('arguments[0].click();', agree_button)
+        driver = webdriver.Chrome(options=options)
+        url = 'https://wonder.cdc.gov/mcd-icd10-provisional.html'
 
-driver.find_element(By.XPATH, "//select[@name='B_1']/optgroup[@label='Year and Month']/option[text()='Year']".format(1)).click()
+        driver.get(url)
 
-driver.find_element(By.XPATH, "//select[@name='B_1']/optgroup[@label='Year and Month']/option[text()='Month']".format(1)).click()
+        # click agree button 
+        agree_button = driver.find_element(By.NAME, 'action-I Agree')
+        driver.execute_script('arguments[0].click();', agree_button)
 
-# hit send
-send_button = driver.find_element(By.NAME, "action-Send")
-driver.execute_script("arguments[0].click();", send_button)
+        #select month and year 
+        driver.find_element(By.XPATH, "//select[@name='B_1']/optgroup[@label='Year and Month']/option[text()='Year']".format(1)).click()
+        driver.find_element(By.XPATH, "//select[@name='B_1']/optgroup[@label='Year and Month']/option[text()='Month']".format(1)).click()
 
-time.sleep(5)
+        # hit send
+        send_button = driver.find_element(By.NAME, "action-Send")
+        driver.execute_script("arguments[0].click();", send_button)
 
-# hit export button
-export_button = driver.find_element(By.NAME, "action-Export")
-driver.execute_script("arguments[0].click();", export_button)
+        time.sleep(5)
 
-time.sleep(1)
+        # hit export button
+        export_button = driver.find_element(By.NAME, "action-Export")
+        driver.execute_script("arguments[0].click();", export_button)
 
-keyboard.press('enter')
+        time.sleep(1)
 
-time.sleep(30)
+        keyboard.press('enter')
 
-print('complete')
+        time.sleep(30)
 
-driver.quit()
+        print('download complete')
 
+        driver.quit()
+
+# Provisional Mortality Statistics, 2018 through Last Current Week
+data = Wonder('C\\Users\\DKMiller\\Downloads\\')
+data.deathDataset()
